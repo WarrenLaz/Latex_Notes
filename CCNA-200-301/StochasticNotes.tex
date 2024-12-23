@@ -1,0 +1,126 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{float}
+\usepackage[colorinlistoftodos]{todonotes}
+
+\title{CCNA 200-301}
+
+\author{Warren Lazarraga}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{IP Access Control Lists}
+
+    \subsection{Introduction to TCP/IP Networking}
+    TCP and UDP are different, TCP stands for Transmission Control Protocol and UDP stands for User Datagram Protocol. TCP is more reliable because it has error detection and congestion control whereas UDP does not. 
+    \subsubsection{TCP (Transmission Control Protocol) }
+    \begin{enumerate}
+        \item \textbf{Multiplexing using ports}, allows host to choose the application where the data's destination resides based on the port number. 
+        \item \textbf{Error Recovery}, Process of having bits in sequence and sending acknowledgement data within the header fields. 
+        \item  \textbf{Flow Control using Windowing}, Process that uses window sizes to prevent buffer overload. 
+        \item  \textbf{Connection Establishment and Termination}, three-way handshake for connection establishment and four-way handshake for connection tear down. 
+        \item \textbf{Ordered data transfer and data segmentation}, segmented bits are received at the same order they were sent. 
+    \end{enumerate}
+
+    UDP and TCP both use \textbf{multiplexing}. where multiplexing is a process used to send multi component packages as a single component. It tells what application to send the data to. TCP and UDP use port numbers in their header to distinguish what application to send the data to. Multiplexing relies on sockets where sockets consists of three pieces of information: IP address, transport protocol (UDP, TCP), and a port number. This is how you would bind specific addresses and port numbers to a so called socket which comprises of these three things. 
+
+    \includegraphics[scale = 0.5]{Screenshot 2024-07-13 at 4.36.07 PM.png}
+
+    The message created by TCP begins with a header followed by the payload. A more generic term is L4PDU or Layer 4 protocol data unit. 
+    \subsubsection{Port Numbers (RFC 6335)}
+    \begin{enumerate}
+        \item \textbf{Well Known Ports (System Ports): } 0-1023, stricter review process to assign ports. 
+        \item \textbf{User Ports (Registered Ports): } 1024-49151, less strict process to assign ports. 
+        \item \textbf{Ephemeral Ports (Private/Dynamic Ports): } 49152-65535, not assigned and used to be dynamically allocate or used temporarily for client applications. 
+    \end{enumerate}
+
+    \begin{table}[H]
+        \begin{tabular}{|l|l|l|}
+        \cline{1-3}
+        Port Number & Protocol & Application \\ \cline{1-3}
+        20          & TCP      & FTP data    \\ \cline{1-3}
+        21          & TCP      & FTP control \\ \cline{1-3}
+        22          & TCP      & SSH \\  \cline{1-3}
+        23          & TCP      & Telnet \\ \cline{1-3}
+        25          & TCP      & SMTP \\ \cline{1-3}
+        53          & UDP, TCP & DNS \\ \cline{1-3}
+        67          & UDP      & DHCP Server \\ \cline{1-3}
+        68          & UDP      & DHCP Client \\ \cline{1-3}
+        69          & UDP      & TFTP \\ \cline{1-3} 
+        80          & TCP      & HTTP \\ \cline{1-3} 
+        110         & TCP      & POP3 \\ \cline{1-3}
+        161         & UDP      & SNMP \\ \cline{1-3}
+        443         & TCP      & SSL \\ \cline{1-3}
+        514         & UDP      & Syslog \\ \cline{1-3}
+        \cline{1-3}
+        \end{tabular}
+    \end{table}
+    \subsubsection*{Flow Control Using Windowing}
+    The receiver can slide a window size up and down, this is called \textbf{dynamic window} in order to alter how much data the host can send to the receiver. 
+
+    \subsubsection{User Datagram Protocol}
+    UDP is a connectionless protocol and does not offer the same reliability as TCP. Although there may be limitations in data transfer reliability UDP offer faster transmission because it requires less bytes in the header than TCP. It does this because packet loss is tolerable meaning if a packet is lost than re transmitting would be less practical in use cases of UDP. UDP only has 8 bytes in the header compared to TCP 20 byte header. Its header consists of the Source port, Destination Port, Length, and a Checksum. 
+
+    \subsubsection{Uniform Resource Identifiers} 
+    URI's consists of 3 components the protocol/scheme, server name/ authority, and the source path/ webpage. As an example, http://www.certskills.com/blog where http is the protocol, www.certskills.com is the server, and /blog is the webpage path. 
+
+    \subsubsection{Finding Web Server Using DNS}
+    a host can get an IP address that corresponds to a particular hostname. A URI corresponds to a designated IP address, DNS stores URI's and IP addresses in order to query a website. As an example, a client sends a DNS request for www.cisco.com to the DNS server. The Enterprise DNS server does not know so it sends a request to the next recursive DNS. DNS server returns a IP address to the client. 
+
+    \subsubsection{Transferring Files with HTTP}
+    After a web client creates a TCP connection to a web server then they both can start communicating. The most used protocol is HTTP. This is used to transfer files between web servers and web clients. There are several request response to a web server e.g. GET and POST. toe get a file from a web server the client needs to send an HTTP GET request to query a file from the web server. POST is used to post something to the web server. A return code of 200 means that the request was done successfully. 
+
+    \subsubsection{How the Receiving Host Identifies the Correct Receiving Application}
+    The receiving host identifies the unique port number for a specified application, the port number is assigned to a specified network process that is sent via TCP. 
+
+    \subsection{Basic IPv4 Access Control Lists}
+    IPv4 gives network engineers the ability to program a filter in a router. The rules of each access control list (ACL) tell the router which packets to discard and which to allow through. There are many types of IP ACL, one type is standard-numbered IP ACLs. 
+
+    \subsubsection{IPv4 Access control list basics}
+    IPv4 access control lists gives network engineers the ability a way to identify what types of packets are being sent. IPv4 ACLs perform different functions in Cisco routers, with the most common being packet filtering. Engineers can enable ACLs so that it sits in the forwarding path of packets as they pass through a router. ACLs can also be used to calculate packets for Quality of Service (QoS) features. QoS allows routers to provide specific packets better service than others. 
+
+    \subsubsection{ACL Location and Direction}
+    Cisco routers can apply the ACL logic to packets at the point at which the IP packets enter an interface, or the point at which they exit an interface. In other words, the ACL becomes associated with an interface for a direction of packet flow ( either in or out). To filter a packet, you must enable an ACL on an interface that processes the packet in the same direction that the packet flows through that interface. 
+
+    \includegraphics[scale = 0.5]{Screenshot 2024-07-15 at 4.10.16 PM.png}
+
+    The figure above illustrates the topology of the packets filtered from left to right. If you want to allow packets to be sent from host A to server 1 but discard packets that are sent by host B, the packets sent by host B are filtered. The four arrowed lines in the figure point the location and direction for the router interface, and directions are going towards R1's F0/0 interface and away from R1's S0/0/0 interface, and towards R2's S0/0/1 interface and away from R2's F0/0 interface. As an example if you wanted to enable ACL on R2's F0/1 interface the ACL could not filter the packet that is sent by host B to server 1 because Rs's F0/1 interface isn't; a part of the route from host B to server 1. To filter a packet, you must enable an ACL on an interface that processes the packet in \underline{the same direction the packet flows through that interface}. 
+
+    \subsubsection{Matching Packets}
+    In order to filter packets, you must configure the router with an IP ACL that matches the packets. \textbf{Matching packets} refers to how to configure ACL commands to look at each packet, listing how to identify which packets should be discarded and which should be allowed through. ACL uses logic that uses values in the packet header, and if its found then discard the packet. Specifically, ACL looks for fields such as destination IP, TCP and UDP port numbers. 
+    
+    \includegraphics[scale = 0.5]{Screenshot 2024-07-15 at 5.59.00 PM.png}
+
+    For example, in the figure above, you want to allow packets form host A to server 1 but discard packets from host B to the same server. The figure above shows two-line ACL in the rectangle with simple matching logic. When enabled R2 will look at the inbound IP packet on that interface and compares each packet to those two ACL commands. Packets that are sent by host A will be allowed through and host B packets will be discarded.
+
+    \subsubsection{Taking Action when a Match Occurs}
+    When using IP ACLs to filter packets, only one of two actions can be chosen. The config commands use the key words: \textbf{deny} and \textbf{permit} which have their respective meanings. In other cases deny or permit may imply other actions.
+
+    \subsubsection{Types of IP ACLs}
+    Cisco IOS has supported IP ACLs since the early days of Cisco routers. Cisco has added many ACL features including the following: 
+    \begin{enumerate}
+        \item Standard numbered ACLs (1-99)
+        \item Extended numbered ACLs (100-199)
+        \item Additional ACL numbers (1300-1999 standard, 2000-2699 extended)
+        \item Named ACLs
+        \item Improved editing with sequence numbers
+    \end{enumerate}
+
+    \subsubsection{Standard Numbered IPv4 ACLs}
+    
+    \includegraphics[scale = 0.45]{Screenshot 2024-07-15 at 6.18.33 PM.png}
+    
+    Cisco filter (ACL) matches only source IP address of the packet (standard), it is configured to identify the ACL using numbers rather than names (numbered), and looks at the IPv4 packets. 
+
+    \subsubsection{List Logic with IP ACL}
+
+\end{document}
